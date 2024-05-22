@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recursive Partitioning</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .partition {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        border: 1px solid #000;
+        box-sizing: border-box;
+      }
+      .partition-buttons {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        gap: 5px;
+      }
+      .remove-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="main-partition"
+      class="partition"
+      style="background-color: #cccccc"
+    >
+      <div class="partition-buttons">
+        <button onclick="splitPartition('v', this.parentElement.parentElement)">
+          V
+        </button>
+        <button onclick="splitPartition('h', this.parentElement.parentElement)">
+          H
+        </button>
+      </div>
+    </div>
+    <script>
+      function getRandomColor() {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
+
+      function createPartitionElement() {
+        const partition = document.createElement("div");
+        partition.className = "partition";
+        partition.style.backgroundColor = getRandomColor();
+        partition.innerHTML = `
+                <div class="partition-buttons">
+                    <button onclick="splitPartition('v', this.parentElement.parentElement)">V</button>
+                    <button onclick="splitPartition('h', this.parentElement.parentElement)">H</button>
+                </div>
+                <button class="remove-button" onclick="removePartition(this.parentElement)">-</button>
+            `;
+        return partition;
+      }
+
+      function splitPartition(direction, element) {
+        const parent = element.parentElement;
+
+        // Clear existing content
+        element.innerHTML = "";
+        element.style.display = "flex";
+        element.style.flexDirection = direction === "v" ? "row" : "column";
+
+        const firstPartition = createPartitionElement();
+        const secondPartition = createPartitionElement();
+
+        firstPartition.style.flex = "1";
+        secondPartition.style.flex = "1";
+
+        element.appendChild(firstPartition);
+        element.appendChild(secondPartition);
+      }
+
+      function removePartition(element) {
+        const parent = element.parentElement;
+        if (parent && parent.id !== "main-partition") {
+          // Prevent removal of the main partition
+          parent.removeChild(element);
+        }
+      }
+    </script>
+  </body>
+</html>
